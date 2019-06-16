@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
   String url = "http://screedwall.ru:3000";
   TextView textView;
   EditText editText1, editText2;
-  boolean auth  = false;
+  private boolean auth  = false;
   JSONArray jsonArray;
   JSONObject jsonObject;
   @Override
@@ -32,34 +32,9 @@ public class MainActivity extends AppCompatActivity {
     editText1 = (EditText) findViewById(R.id.editView1);
     editText2 = (EditText) findViewById(R.id.editView2);
     textView = (TextView) findViewById(R.id.textView2);
-  }
 
-  public class Authorization2 extends AsyncTask<String, Void, String>{
-    OkHttpClient client = new OkHttpClient();
-    @Override
-    protected String doInBackground(String... params){
-      HttpUrl.Builder urlBuilder = HttpUrl.parse(params[0]).newBuilder();
-      urlBuilder.addQueryParameter("login", params[1]);
-      urlBuilder.addQueryParameter("password", params[2]);
-      String url = urlBuilder.build().toString();
-
-      Request request = new Request.Builder()
-            .url(url)
-            .build();
-      try {
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-        // Do something with the response.
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      return null;
-    }
-    @Override
-    protected void  onPostExecute(String res){
-      super.onPostExecute(res);
-      textView.setText("res: "+res);
-    }
+    editText1.setText("Admin");
+    editText2.setText("Admin");
   }
 
   public class Authorization extends AsyncTask<String, Void, String> {
@@ -90,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
       super.onPostExecute(res);
       try{
         jsonObject = new JSONObject(res);
-        start(jsonObject.getBoolean("respons"));
+        start(jsonObject.getBoolean("response"), 0, 0);
       }catch (JSONException ex){
         textView.setText(ex.getMessage());
       }
@@ -102,10 +77,20 @@ public class MainActivity extends AppCompatActivity {
     authorization.execute(url+"/auth", editText1.getText().toString(), editText2.getText().toString());
 
   }
-  void start(boolean auth){
+  void start(boolean auth, int type, int userId){
     if(auth){
-      Intent intent = new Intent(this, Client.class);
-      startActivity(intent);
+      switch (type) {
+        case 0: {
+          Intent intent = new Intent(this, Client.class);
+          intent.putExtra("userType", 0);//------------------------------ЗАГЛУШКА------------------------------
+          intent.putExtra("userID", 4);//------------------------------ЗАГЛУШКА------------------------------
+          startActivity(intent);
+          break;
+        }
+        case 1: {
+
+        }
+      }
     }
     else{
       textView.setText("Login or password uncorrected");

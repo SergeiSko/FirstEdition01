@@ -21,23 +21,67 @@ import okhttp3.Response;
 
 public class Client extends AppCompatActivity {
   final String url = "http://screedwall.ru:3000";
+  private int userId, userType;
 
   TextView textView1, textView2, textView3, textView4, textView5;
-  EditText editText1;
+  TextView textViewEr;
+  EditText editTextId, editText1;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_client);
+
+    userType = getIntent().getIntExtra("userType", 0);
+    userId = getIntent().getIntExtra("userID", 0);
 
     textView1 = (TextView) findViewById(R.id.textRow1);
     textView2 = (TextView) findViewById(R.id.textRow2);
     textView3 = (TextView) findViewById(R.id.textRow3);
     textView4 = (TextView) findViewById(R.id.textRow4);
     textView5 = (TextView) findViewById(R.id.textRow5);
+    textViewEr = (TextView) findViewById(R.id.textViewEr);
+    editTextId = (EditText) findViewById(R.id.editTextId);
     editText1 = (EditText) findViewById(R.id.editText1);
+
+    GetTasks getServer = new GetTasks();
+    getServer.execute(url + "/getTasks");
   }
 
-  public class GetServer extends AsyncTask<String, Void, String> {
+  public class SelectTask extends AsyncTask<String, Void, String>{
+    @Override
+    protected String doInBackground(String... params){
+      OkHttpClient client = new OkHttpClient();
+
+      RequestBody formBody = new FormBody.Builder()
+            .add("_id", params[1])
+            .add("stateId", params[2])
+            .build();
+
+      Request request = new Request.Builder()
+            .url(params[0])
+            .post(formBody)
+            .build();
+      try{
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+      }catch (IOException e){
+        e.printStackTrace();
+      }
+
+      return null;
+    }
+    @Override
+    protected void onPostExecute(String res){
+      super.onPostExecute(res);
+      textViewEr.setText(res);
+
+      GetTasks getServer = new GetTasks();
+      getServer.execute(url + "/getTasks");
+    }
+  }
+
+  public class GetTasks extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params){
@@ -63,12 +107,11 @@ public class Client extends AppCompatActivity {
       try{
         JSONArray array = new JSONArray(res);
         if(array!=null){
-          /*
           textView1.setText("id");
           textView2.setText("Задача");
           textView3.setText("Диспетчер");
           textView4.setText("Работник");
-          textView5.setText("Статус");*/
+          textView5.setText("Статус");
           for(int i = 0; i<array.length(); i++){
             JSONObject jsonObject = array.getJSONObject(i);
             if(jsonObject != null){
@@ -82,14 +125,23 @@ public class Client extends AppCompatActivity {
         }
       }catch (Exception ex)
       {
-
+        ex.printStackTrace();
       }
-      //textView1.setText(res);
     }
   }
 
   public void getServer(View view){
-    GetServer getServer = new GetServer();
+    GetTasks getServer = new GetTasks();
     getServer.execute(url + "/getTasks");
+  }
+
+  public void selectTask(View view){
+    SelectTask selectTask = new SelectTask();
+    selectTask.execute(url + "/updateTask", editTextId.getText().toString(), "1");
+  }
+
+  public void endTask(View view){
+    SelectTask selectTask = new SelectTask();
+    selectTask.execute(url + "/updateTask", editTextId.getText().toString(), "2");
   }
 }

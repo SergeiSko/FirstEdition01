@@ -31,7 +31,6 @@ public class Client extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_client);
 
-    userType = getIntent().getIntExtra("userType", 0);
     userId = getIntent().getIntExtra("userID", 0);
 
     textView1 = (TextView) findViewById(R.id.textRow1);
@@ -78,6 +77,7 @@ public class Client extends AppCompatActivity {
 
       GetTasks getServer = new GetTasks();
       getServer.execute(url + "/getTasks");
+
     }
   }
 
@@ -138,6 +138,7 @@ public class Client extends AppCompatActivity {
   public void selectTask(View view){
     SelectTask selectTask = new SelectTask();
     selectTask.execute(url + "/updateTask", editTextId.getText().toString(), "1");
+    textViewEr.setText("Send request");
   }
 
   public void endTask(View view){

@@ -65,11 +65,10 @@ public class MainActivity extends AppCompatActivity {
       super.onPostExecute(res);
       try{
         jsonObject = new JSONObject(res);
-        start(jsonObject.getBoolean("response"), 0, 0);
+        start(jsonObject.getBoolean("response"), jsonObject.getInt("userId"), jsonObject.getInt("userType"));
       }catch (JSONException ex){
         textView.setText(ex.getMessage());
       }
-
     }
   }
   public void Auth(View view){
@@ -80,20 +79,31 @@ public class MainActivity extends AppCompatActivity {
   void start(boolean auth, int type, int userId){
     if(auth){
       switch (type) {
-        case 0: {
-          Intent intent = new Intent(this, Client.class);
-          intent.putExtra("userType", 0);//------------------------------ЗАГЛУШКА------------------------------
+        case 0: {// ----------- Admin ------------
+          Intent intent = new Intent(this, AdminActivity.class);
           intent.putExtra("userID", 4);//------------------------------ЗАГЛУШКА------------------------------
           startActivity(intent);
           break;
         }
-        case 1: {
-
+        case 1: {// ----------- Dispatcher ------------
+          Intent intent = new Intent(this, DispatcherActivity.class);
+          intent.putExtra("userID", 4);//------------------------------ЗАГЛУШКА------------------------------
+          startActivity(intent);
+          break;
+        }
+        case 2:{// ----------- Worker ------------
+          Intent intent = new Intent(this, Client.class);
+          intent.putExtra("userID", 4);//------------------------------ЗАГЛУШКА------------------------------
+          startActivity(intent);
         }
       }
     }
     else{
       textView.setText("Login or password uncorrected");
     }
+  }
+  public void support(View view){
+    Intent intent = new Intent(this, SupportActivity.class);
+    startActivity(intent);
   }
 }

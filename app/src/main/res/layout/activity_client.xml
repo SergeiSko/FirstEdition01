@@ -10,6 +10,7 @@
         android:id="@+id/tableLayout2"
         android:layout_width="330dp"
         android:layout_height="267dp"
+        android:background="#ffd"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
@@ -30,13 +31,13 @@
                     android:id="@+id/textRow1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="id" />
+                    android:text="id"/>
 
                 <TextView
                     android:id="@+id/textRow2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Задача" />
+                    android:text="Задача"/>
 
                 <TextView
                     android:id="@+id/textRow3"
@@ -144,10 +145,12 @@
         android:id="@+id/textViewEr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.96" />
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout2"
+        app:layout_constraintVertical_bias="0.137" />
 </android.support.constraint.ConstraintLayout>
